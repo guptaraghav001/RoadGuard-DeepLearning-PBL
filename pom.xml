@@ -73,7 +73,9 @@
 
 
 
-<mainClass>com.roadguard.neuralnetwork.ArtificialNeuron</mainClass></configuration>
+<mainClass>com.roadguard.neuralnetwork.SigmoidNeuron</mainClass>
+
+</configuration>
 </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
