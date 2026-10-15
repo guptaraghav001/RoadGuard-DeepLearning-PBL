@@ -73,7 +73,11 @@
 
 
 
-<mainClass>com.roadguard.neuralnetwork.LearningRateExperiment</mainClass>
+<mainClass>com.roadguard.math.TensorOperations</mainClass>
+
+
+
+
 
 </configuration>
 </plugin>
