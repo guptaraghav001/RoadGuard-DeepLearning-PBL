@@ -73,8 +73,7 @@
 
 
 
-<mainClass>com.roadguard.neuralnetwork.MLPGradientChecker</mainClass>
-
+<mainClass>com.roadguard.neuralnetwork.LearningRateExperiment</mainClass>
 
 </configuration>
 </plugin>
