@@ -73,8 +73,7 @@
 
 
 
-<mainClass>com.roadguard.neuralnetwork.GradientChecker</mainClass>
-
+<mainClass>com.roadguard.neuralnetwork.MLPGradientChecker</mainClass>
 
 
 </configuration>

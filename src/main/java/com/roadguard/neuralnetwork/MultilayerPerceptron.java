@@ -212,4 +212,96 @@ public class MultilayerPerceptron {
             );
         }
     }
+
+
+    // Returns all 13 parameters in a fixed order.
+    public double[] getParameters() {
+        double[] p = new double[13];
+        int k = 0;
+
+        for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 2; i++)
+                p[k++] = hiddenWeights[j][i];
+
+        for (int j = 0; j < 3; j++)
+            p[k++] = hiddenBiases[j];
+
+        for (int j = 0; j < 3; j++)
+            p[k++] = outputWeights[j];
+
+        p[k] = outputBias;
+        return p;
+    }
+
+    public void setParameters(double[] p) {
+        if (p == null || p.length != 13)
+            throw new IllegalArgumentException(
+                "Exactly 13 parameters required"
+            );
+
+        for (double value : p)
+            if (!Double.isFinite(value))
+                throw new IllegalArgumentException(
+                    "Parameters must be finite"
+                );
+
+        int k = 0;
+
+        for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 2; i++)
+                hiddenWeights[j][i] = p[k++];
+
+        for (int j = 0; j < 3; j++)
+            hiddenBiases[j] = p[k++];
+
+        for (int j = 0; j < 3; j++)
+            outputWeights[j] = p[k++];
+
+        outputBias = p[k];
+    }
+
+    // Analytical gradient for one training example.
+    // Parameter ordering matches getParameters().
+    public double[] analyticalGradients(
+            double[] inputs, double target) {
+
+        checkInputs(inputs);
+
+        if (target != 0.0 && target != 1.0)
+            throw new IllegalArgumentException(
+                "Binary target required"
+            );
+
+        double[] hidden = hiddenForward(inputs);
+        double prediction = outputForward(hidden);
+
+        double outputDelta = prediction - target;
+        double[] hiddenDelta = new double[3];
+
+        for (int j = 0; j < 3; j++) {
+            hiddenDelta[j] =
+                outputDelta * outputWeights[j]
+                * hidden[j] * (1.0 - hidden[j]);
+        }
+
+        double[] gradients = new double[13];
+        int k = 0;
+
+        for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 2; i++)
+                gradients[k++] = hiddenDelta[j] * inputs[i];
+
+        for (int j = 0; j < 3; j++)
+            gradients[k++] = hiddenDelta[j];
+
+        for (int j = 0; j < 3; j++)
+            gradients[k++] = outputDelta * hidden[j];
+
+        gradients[k] = outputDelta;
+
+        return gradients;
+    }
+
+
+
 }
