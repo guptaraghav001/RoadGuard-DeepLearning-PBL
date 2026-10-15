@@ -73,8 +73,7 @@
 
 
 
-<mainClass>com.roadguard.dataset.SplitValidator</mainClass>
-</configuration>
+<mainClass>com.roadguard.neuralnetwork.ArtificialNeuron</mainClass></configuration>
 </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
