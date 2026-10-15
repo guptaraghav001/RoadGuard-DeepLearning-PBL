@@ -73,8 +73,7 @@
 
 
 
-<mainClass>com.roadguard.neuralnetwork.MultilayerPerceptron</mainClass>
-
+<mainClass>com.roadguard.neuralnetwork.GradientChecker</mainClass>
 
 
 
