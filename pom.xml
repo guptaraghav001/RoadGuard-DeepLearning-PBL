@@ -74,6 +74,10 @@
 
 
 <mainClass>com.roadguard.neuralnetwork.MultilayerPerceptron</mainClass>
+
+
+
+
 </configuration>
 </plugin>
         <plugin>

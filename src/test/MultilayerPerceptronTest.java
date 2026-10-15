@@ -64,4 +64,37 @@ public class MultilayerPerceptronTest {
             assertTrue(Double.isFinite(output));
         }
     }
+
+
+
+@Test
+void testTrainingReducesLoss() {
+
+    double[][] inputs = {
+        {0, 0}, {0, 1}, {1, 0}, {1, 1}
+    };
+
+    double[] targets = {0, 1, 1, 0};
+
+    MultilayerPerceptron mlp =
+        new MultilayerPerceptron();
+
+    double initialLoss =
+        mlp.averageLoss(inputs, targets);
+
+    for (int epoch = 0; epoch < 2000; epoch++) {
+        for (int i = 0; i < inputs.length; i++) {
+            mlp.trainSample(inputs[i], targets[i], 0.5);
+        }
+    }
+
+    double finalLoss =
+        mlp.averageLoss(inputs, targets);
+
+    assertTrue(
+        finalLoss < initialLoss,
+        "Training should reduce the loss"
+    );
+}
+
 }
