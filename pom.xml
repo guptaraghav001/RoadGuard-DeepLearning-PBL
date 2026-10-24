@@ -44,6 +44,43 @@
             <scope>test</scope>
         </dependency>
 
+
+<!-- Deep Java Library API -->
+<dependency>
+    <groupId>ai.djl</groupId>
+    <artifactId>api</artifactId>
+    <version>0.35.0</version>
+</dependency>
+
+
+
+<!-- PyTorch Engine -->
+<dependency>
+    <groupId>ai.djl.pytorch</groupId>
+    <artifactId>pytorch-engine</artifactId>
+    <version>0.35.0</version>
+    <scope>runtime</scope>
+</dependency>
+
+<!-- PyTorch Native CPU for Apple Silicon -->
+<dependency>
+    <groupId>ai.djl.pytorch</groupId>
+    <artifactId>pytorch-native-cpu</artifactId>
+    <version>2.7.1</version>
+    <classifier>osx-aarch64</classifier>
+    <scope>runtime</scope>
+</dependency>
+
+<!-- PyTorch JNI -->
+<dependency>
+    <groupId>ai.djl.pytorch</groupId>
+    <artifactId>pytorch-jni</artifactId>
+    <version>2.7.1-0.35.0</version>
+    <scope>runtime</scope>
+</dependency>
+
+
+
         <!-- JUnit Parameterized Tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -94,7 +131,7 @@
 
                 <configuration>
 
-<mainClass>com.roadguard.cnn.FeatureMapVisualizer</mainClass>
+<mainClass>com.roadguard.training.DJLEngineCheck</mainClass>
                 </configuration>
             </plugin>
 

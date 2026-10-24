@@ -1,4 +1,3 @@
-
 package com.roadguard.neuralnetwork;
 
 import org.junit.jupiter.api.Test;
