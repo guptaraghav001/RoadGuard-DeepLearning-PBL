@@ -131,7 +131,10 @@
 
                 <configuration>
 
-<mainClass>com.roadguard.training.DJLEngineCheck</mainClass>
+
+
+<mainClass>com.roadguard.training.CNNForwardPass</mainClass>               
+               
                 </configuration>
             </plugin>
 
