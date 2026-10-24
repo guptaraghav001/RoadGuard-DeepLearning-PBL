@@ -94,8 +94,7 @@
 
                 <configuration>
 
-                   <mainClass>com.roadguard.preprocessing.BoundingBoxTransformer</mainClass>
-                
+<mainClass>com.roadguard.cnn.Convolution2D</mainClass>                
                 
                 </configuration>
             </plugin>
