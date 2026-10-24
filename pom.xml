@@ -94,8 +94,7 @@
 
                 <configuration>
 
-<mainClass>com.roadguard.cnn.Convolution2D</mainClass>                
-                
+<mainClass>com.roadguard.cnn.CNNOperations</mainClass>                
                 </configuration>
             </plugin>
 
