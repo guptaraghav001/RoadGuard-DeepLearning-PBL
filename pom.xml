@@ -94,7 +94,8 @@
 
                 <configuration>
 
-<mainClass>com.roadguard.cnn.CNNFeatureExtractor</mainClass>                </configuration>
+<mainClass>com.roadguard.cnn.FeatureMapVisualizer</mainClass>
+                </configuration>
             </plugin>
 
         </plugins>
