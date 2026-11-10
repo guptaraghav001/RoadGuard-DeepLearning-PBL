@@ -133,8 +133,11 @@
 
 
 
-<mainClass>com.roadguard.training.CNNForwardPass</mainClass>               
-               
+<mainClass>com.roadguard.dataset.FullDatasetCropGenerator</mainClass>
+
+
+
+
                 </configuration>
             </plugin>
 

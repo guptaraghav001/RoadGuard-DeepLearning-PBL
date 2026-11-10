@@ -25,3 +25,5 @@ validation_output.txt
 
 # Secrets
 .env
+
+bounding_box_preview.png
