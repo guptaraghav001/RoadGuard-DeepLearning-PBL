@@ -1,12 +1,14 @@
 
 package com.roadguard.dataset;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -27,10 +29,55 @@ public class DamageCropGenerator {
 
     private static final int SIZE = 224;
 
+    // Original method for earlier experiments.
     public static int processImage(
             String imageName,
             String labelName,
             String split) throws IOException {
+
+        return processImage(
+            imageName,
+            labelName,
+            split,
+            OUTPUT_DIR
+        );
+    }
+
+    // Method supporting configurable output directories.
+    public static int processImage(
+            String imageName,
+            String labelName,
+            String split,
+            Path outputDir) throws IOException {
+
+        return processImage(
+            imageName,
+            labelName,
+            split,
+            outputDir,
+            new ArrayList<>()
+        );
+    }
+
+    // Main implementation with rejection logging.
+    public static int processImage(
+            String imageName,
+            String labelName,
+            String split,
+            Path outputDir,
+            List<String> rejections) throws IOException {
+
+        if (outputDir == null) {
+            throw new IllegalArgumentException(
+                "Output directory cannot be null"
+            );
+        }
+
+        if (rejections == null) {
+            throw new IllegalArgumentException(
+                "Rejection list cannot be null"
+            );
+        }
 
         if (!List.of("train", "val", "test")
                 .contains(split)) {
@@ -71,16 +118,21 @@ public class DamageCropGenerator {
                 continue;
             }
 
+            String prefix =
+                split + " | " + labelName
+                + " | line " + (index + 1) + " | ";
+
             String[] parts = line.split("\\s+");
 
             if (parts.length != 5) {
-                System.out.println(
-                    "Skipping malformed label: " + line
+                rejections.add(
+                    prefix + "Malformed annotation: " + line
                 );
                 continue;
             }
 
             try {
+
                 int classId = Integer.parseInt(parts[0]);
 
                 double cx = Double.parseDouble(parts[1]);
@@ -95,7 +147,16 @@ public class DamageCropGenerator {
                         || !Double.isFinite(h)
                         || cx < 0 || cx > 1
                         || cy < 0 || cy > 1
-                        || w <= 0 || h <= 0) {
+                        || w <= 0 || h <= 0
+                        || cx - w / 2 < -1e-9
+                        || cx + w / 2 > 1 + 1e-9
+                        || cy - h / 2 < -1e-9
+                        || cy + h / 2 > 1 + 1e-9) {
+
+                    rejections.add(
+                        prefix + "Invalid class or coordinates: "
+                        + line
+                    );
                     continue;
                 }
 
@@ -127,12 +188,18 @@ public class DamageCropGenerator {
                 int cropH = y2 - y1;
 
                 if (cropW <= 0 || cropH <= 0) {
+                    rejections.add(
+                        prefix + "Empty bounding box: " + line
+                    );
                     continue;
                 }
 
-                // Add 15% context around the damage.
-                int marginX = (int) Math.ceil(cropW * 0.15);
-                int marginY = (int) Math.ceil(cropH * 0.15);
+                // Add 15% surrounding context.
+                int marginX =
+                    (int) Math.ceil(cropW * 0.15);
+
+                int marginY =
+                    (int) Math.ceil(cropH * 0.15);
 
                 int left = Math.max(0, x1 - marginX);
                 int top = Math.max(0, y1 - marginY);
@@ -143,6 +210,9 @@ public class DamageCropGenerator {
                 int regionH = bottom - top;
 
                 if (regionW <= 0 || regionH <= 0) {
+                    rejections.add(
+                        prefix + "Invalid crop region: " + line
+                    );
                     continue;
                 }
 
@@ -150,7 +220,7 @@ public class DamageCropGenerator {
                     left, top, regionW, regionH
                 );
 
-                // Preserve aspect ratio.
+                // Preserve aspect ratio with letterboxing.
                 double scale = Math.min(
                     (double) SIZE / regionW,
                     (double) SIZE / regionH
@@ -159,6 +229,7 @@ public class DamageCropGenerator {
                 int resizedW = Math.max(
                     1, (int) Math.round(regionW * scale)
                 );
+
                 int resizedH = Math.max(
                     1, (int) Math.round(regionH * scale)
                 );
@@ -167,17 +238,22 @@ public class DamageCropGenerator {
                 int padY = (SIZE - resizedH) / 2;
 
                 BufferedImage resized = new BufferedImage(
-                    SIZE, SIZE, BufferedImage.TYPE_INT_RGB
+                    SIZE, SIZE,
+                    BufferedImage.TYPE_INT_RGB
                 );
 
                 Graphics2D graphics =
                     resized.createGraphics();
 
                 try {
+
                     graphics.setColor(
-                        new java.awt.Color(114, 114, 114)
+                        new Color(114, 114, 114)
                     );
-                    graphics.fillRect(0, 0, SIZE, SIZE);
+
+                    graphics.fillRect(
+                        0, 0, SIZE, SIZE
+                    );
 
                     graphics.setRenderingHint(
                         RenderingHints.KEY_INTERPOLATION,
@@ -185,16 +261,19 @@ public class DamageCropGenerator {
                     );
 
                     graphics.drawImage(
-                        crop, padX, padY,
-                        resizedW, resizedH, null
+                        crop,
+                        padX,
+                        padY,
+                        resizedW,
+                        resizedH,
+                        null
                     );
+
                 } finally {
                     graphics.dispose();
                 }
 
-
-
-                Path classDir = OUTPUT_DIR
+                Path classDir = outputDir
                     .resolve(split)
                     .resolve("class_" + classId);
 
@@ -208,15 +287,22 @@ public class DamageCropGenerator {
                     baseName + "_box" + index + ".png"
                 );
 
-                ImageIO.write(
+                boolean saved = ImageIO.write(
                     resized, "png", output.toFile()
                 );
+
+                if (!saved) {
+                    throw new IOException(
+                        "PNG writer unavailable: " + output
+                    );
+                }
 
                 generated++;
 
             } catch (NumberFormatException e) {
-                System.out.println(
-                    "Skipping invalid annotation: " + line
+
+                rejections.add(
+                    prefix + "Invalid numeric value: " + line
                 );
             }
         }
@@ -231,15 +317,27 @@ public class DamageCropGenerator {
             "===== ROADGUARD DAMAGE CROP GENERATOR ====="
         );
 
+        List<String> rejections = new ArrayList<>();
+
         int count = processImage(
             "India_005741.jpg",
             "India_005741.txt",
-            "train"
+            "train",
+            OUTPUT_DIR,
+            rejections
         );
 
         System.out.println(
             "Generated crops: " + count
         );
+
+        System.out.println(
+            "Rejected annotations: " + rejections.size()
+        );
+
+        for (String rejection : rejections) {
+            System.out.println(rejection);
+        }
 
         System.out.println(
             "Crop generation completed."

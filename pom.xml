@@ -18,7 +18,7 @@
     <!-- Java Configuration -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
     </properties>
 
     <!-- JUnit Version Management -->
@@ -45,6 +45,10 @@
         </dependency>
 
 
+
+
+
+
 <!-- Deep Java Library API -->
 <dependency>
     <groupId>ai.djl</groupId>
@@ -52,7 +56,11 @@
     <version>0.35.0</version>
 </dependency>
 
-
+<dependency>
+    <groupId>ai.djl</groupId>
+    <artifactId>basicdataset</artifactId>
+    <version>0.35.0</version>
+</dependency>
 
 <!-- PyTorch Engine -->
 <dependency>
@@ -133,9 +141,7 @@
 
 
 
-<mainClass>com.roadguard.dataset.FullDatasetCropGenerator</mainClass>
-
-
+<mainClass>com.roadguard.training.RoadDamageV2ForwardPass</mainClass>
 
 
                 </configuration>
