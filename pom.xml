@@ -141,9 +141,7 @@
 
 
 
-<mainClass>com.roadguard.training.RoadDamageV2ForwardPass</mainClass>
-
-
+<mainClass>com.roadguard.RoadGuardGUI</mainClass>
                 </configuration>
             </plugin>
 

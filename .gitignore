@@ -26,4 +26,39 @@ validation_output.txt
 # Secrets
 .env
 
+data/yolo_dataset/
+
 bounding_box_preview.png
+
+
+
+# Python virtual environments
+.venv/
+.venv-yolo/
+__pycache__/
+*.pyc
+
+# Raw and generated datasets
+data/raw/
+data/processed/
+data/crops/
+data/yolo_dataset/
+
+# Training outputs and model checkpoints
+runs/
+outputs/
+models/
+*.pt
+*.pth
+*.onnx
+*.params
+
+# Generated experiment files
+experiments/
+
+# Java build artifacts
+target/
+*.class
+
+# macOS
+.DS_Store

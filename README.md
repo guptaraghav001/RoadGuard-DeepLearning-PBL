@@ -7,7 +7,7 @@ Urban Pothole and Road Damage Assessment System Using Deep Learning
 RoadGuard is an individual university Deep Learning PBL project that aims to detect, classify, and assess road surface damage using computer vision and deep learning.
 
 ## Technology Stack
-- Java 17
+- Java 25 (LTS)
 - Apache Maven
 - Deep Java Library (planned)
 - OpenCV (planned)
